@@ -362,8 +362,24 @@ shap.plots.bar(shap.Explanation(values=shap_values2,
 # Generate the dependence plot for this feature
 feature_index = predictors.index('Pop')  # Find the index of the feature
 shap.dependence_plot(feature_index, shap_values[:,0,:], val_sample[:,0,:], feature_names=predictors, interaction_index='Gas')
+shap.dependence_plot('Pop',shap_values[:,0,:], val_sample[:,0,:], feature_names=predictors, interaction_index=None)
 
+# decision plot
+shap.decision_plot(expected_value[0], shap_values[0], val_sample[0], feature_names=predictors)
+shap.decision_plot(expected_value[0], shap_values[:,0,:], val_sample[:,0,:], feature_names=predictors, feature_order='hclust')
+shap.decision_plot(expected_value[0], shap_values[:,0,:], val_sample[:,0,:], feature_names=predictors, link='logit')
 
+# SHAP heatmap plot
+shap.plots.heatmap(
+    shap.Explanation(
+        values=shap_values[:,0,:],
+        base_values=expected_value[0],
+        data=val_sample[:,0,:],
+        feature_names=predictors
+    ),
+    max_display=10,feature_values=shap.Explanation.abs.mean(0)) # Adjust the number of features displayed
+
+#Other heatmap plot by sns.heatmap
 #Assuming the input data has `input_dim` features
 #shap_heatmap = shap_values[:12,0,:] #train_sample
 shap_heatmap = shap_values[:12,0,:] #val_sample
